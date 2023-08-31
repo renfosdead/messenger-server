@@ -13,7 +13,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "shared": "file:../messenger-types",
+    "shared": "file:./messenger-types",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

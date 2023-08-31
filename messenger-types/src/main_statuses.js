@@ -1,0 +1,16 @@
+export default [
+  "ready",
+  "angry",
+  "depression",
+  "home",
+  "work",
+  "eat",
+  "away",
+  "na",
+  "busy",
+  "danger",
+  "online",
+  "invisible",
+  "invisibleAll",
+  "offline",
+];
