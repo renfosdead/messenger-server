@@ -4,7 +4,9 @@ const chat = require("../models/chat.model");
 const m = require("../helpers/middlewares");
 
 router.get("/", async (req, res) => {
-  await chat.getEvents().then((events) => res.json(events));
+  await chat
+    .getEvents(req.headers.chatid, req.headers.userid)
+    .then((events) => res.json(events));
 });
 
 module.exports = router;

@@ -1,4 +1,4 @@
-export default [
+module.exports = [
   "no",
   "angry",
   "duck",
