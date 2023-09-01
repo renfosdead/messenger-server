@@ -9,13 +9,7 @@ const customStatuses = require("../messenger-types/src/custom_statuses");
 
 function login({ name, status, customStatus }) {
   return new Promise(async (resolve, reject) => {
-    if (
-      !name ||
-      !status ||
-      !customStatus ||
-      !mainStatuses.includes(status) ||
-      !customStatuses.includes(customStatus.status)
-    ) {
+    if (!name || !status || !customStatus || !mainStatuses.includes(status)) {
       resolve({ error: "Wrong data" });
     } else {
       const chatId = chat[0].id;

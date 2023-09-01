@@ -7,9 +7,10 @@ function getEvents(chatId, userId) {
   return new Promise((resolve, reject) => {
     if (!chatId || !userId) {
       resolve({ error: "No data" });
+    } else {
+      const chatRoom = chat.find((e) => e.id === chatId);
+      resolve(chatRoom.events.filter((evt) => evt));
     }
-    const chatRoom = chat.find((e) => e.id === chatId);
-    resolve(chatRoom.events.filter((evt) => evt));
   });
 }
 
