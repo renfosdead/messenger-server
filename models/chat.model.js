@@ -9,7 +9,7 @@ function getEvents(chatId, userId) {
       resolve({ error: "No data" });
     } else {
       const chatRoom = chat.find((e) => e.id === chatId);
-      resolve(chatRoom.events.filter((evt) => evt));
+      resolve(chatRoom.events.filter((evt) => evt.userId !== userId));
     }
   });
 }
@@ -48,9 +48,19 @@ function deleteEvent(type, userId) {
   });
 }
 
+function deleteEvents(eventIds) {
+  return new Promise((resolve, reject) => {
+    chat[0].events = chat[0].events.filter((p) => !eventIds.includes(p.id));
+
+    helper.writeJSONFile(filename, chat);
+    resolve();
+  });
+}
+
 module.exports = {
   addEvent,
   getEvents,
   getEvent,
   deleteEvent,
+  deleteEvents,
 };
