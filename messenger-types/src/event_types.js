@@ -1,7 +1,5 @@
-export default [
-  "login",
-  "logout",
-  "changeName",
-  "changeStatus",
-  "changeCustomStatus",
-];
+module.exports = {
+  changeName: "changeName",
+  changeStatus: "changeStatus",
+  changeCustomStatus: "changeCustomStatus",
+};

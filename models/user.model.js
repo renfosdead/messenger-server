@@ -6,6 +6,7 @@ const chatModel = require("./chat.model.js");
 
 const mainStatuses = require("../messenger-types/src/main_statuses.js");
 const customStatuses = require("../messenger-types/src/custom_statuses");
+const EVENTS = require("../messenger-types/src/event_types.js");
 
 function login({ name, status, customStatus }) {
   return new Promise(async (resolve, reject) => {
@@ -17,17 +18,17 @@ function login({ name, status, customStatus }) {
 
       await addUser(userId);
 
-      await chatModel.addEvent("changeName", {
+      await chatModel.addEvent(EVENTS.changeName, {
         chatId,
         userId,
         name,
       });
-      await chatModel.addEvent("changeStatus", {
+      await chatModel.addEvent(EVENTS.changeStatus, {
         chatId,
         userId,
         status,
       });
-      await chatModel.addEvent("changeCustomStatus", {
+      await chatModel.addEvent(EVENTS.changeCustomStatus, {
         chatId,
         userId,
         customStatus,
@@ -45,9 +46,9 @@ function logout(chatId, userId) {
     } else {
       await removeUser(userId);
 
-      await chatModel.deleteEvent("changeName", userId);
-      await chatModel.deleteEvent("changeCustomStatus", userId);
-      await chatModel.addEvent("changeStatus", {
+      await chatModel.deleteEvent(EVENTS.changeName, userId);
+      await chatModel.deleteEvent(EVENTS.changeCustomStatus, userId);
+      await chatModel.addEvent(EVENTS.changeStatus, {
         chatId,
         userId,
         status: "offline",
