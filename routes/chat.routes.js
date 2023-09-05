@@ -7,7 +7,9 @@ router.get("/", async (req, res) => {
   await chat
     .getEvents(req.headers.chatid, req.headers.userid)
     .then((events) => {
-      chat.deleteEvents(events.map((e) => e.id));
+      if (!events.error) {
+        chat.deleteEvents((events || []).map((e) => e.id));
+      }
       return res.json(events);
     });
 });
