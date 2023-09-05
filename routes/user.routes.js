@@ -7,7 +7,9 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/logout", async (req, res) => {
-  await user.logout(req.headers.userid).then((payload) => res.json(payload));
+  await user
+    .logout(req.headers.chatid, req.headers.userid)
+    .then((payload) => res.json(payload));
 });
 
 module.exports = router;

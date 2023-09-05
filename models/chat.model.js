@@ -24,9 +24,9 @@ function getEvent(type, userId) {
 }
 
 function addEvent(type, evt) {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     chat[0].events = chat[0].events.filter(
-      (p) => p.type === type && p.userId === userId
+      (p) => !(p.type === type && p.userId === evt.userId)
     );
 
     const id = { id: helper.getNewId() };

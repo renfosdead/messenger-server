@@ -17,11 +17,19 @@ function login({ name, status, customStatus }) {
 
       await addUser(userId);
 
-      await chatModel.addEvent("login", {
+      await chatModel.addEvent("changeName", {
         chatId,
         userId,
         name,
+      });
+      await chatModel.addEvent("changeStatus", {
+        chatId,
+        userId,
         status,
+      });
+      await chatModel.addEvent("changeCustomStatus", {
+        chatId,
+        userId,
         customStatus,
       });
 
@@ -30,25 +38,28 @@ function login({ name, status, customStatus }) {
   });
 }
 
-function logout(userId) {
+function logout(chatId, userId) {
   return new Promise(async (resolve, reject) => {
     if (!userId) {
       resolve({ error: "User is not logged in" });
     } else {
       await removeUser(userId);
 
-      const user = await chatModel.getEvent("login", userId);
-      delete user.type;
+      await chatModel.deleteEvent("changeName", userId);
+      await chatModel.deleteEvent("changeCustomStatus", userId);
+      await chatModel.addEvent("changeStatus", {
+        chatId,
+        userId,
+        status: "offline",
+      });
 
-      await chatModel.deleteEvent("login", userId);
-      await chatModel.addEvent("logout", user);
-      resolve({ user });
+      resolve({ user: userId });
     }
   });
 }
 
 function addUser(id) {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     if (!chat[0].users.includes(id)) {
       chat[0].users.push(id);
       helper.writeJSONFile(filename, chat);
@@ -58,7 +69,7 @@ function addUser(id) {
 }
 
 function removeUser(id) {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     chat[0].users = chat[0].users.filter((uid) => uid !== id);
     helper.writeJSONFile(filename, chat);
     resolve();
