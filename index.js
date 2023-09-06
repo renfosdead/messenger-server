@@ -1,3 +1,8 @@
+const helper = require("./helpers/helper.js");
+if (process.env.NODE_ENV === "prod") {
+  helper.copyLogFileToTemp();
+}
+
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");

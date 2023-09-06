@@ -20,12 +20,37 @@ function mustBeInArray(array, id) {
   });
 }
 
-function writeJSONFile(filename, content) {
-  fs.writeFileSync(filename, JSON.stringify(content), "utf8", (err) => {
+function writeJSONFile(content) {
+  fs.writeFileSync(getFileName(), JSON.stringify(content), "utf8", (err) => {
     if (err) {
       console.log(err);
     }
   });
+}
+
+function copyLogFileToTemp() {
+  console.log("copy datafile...");
+  fs.copyFile(
+    localFileName,
+    serverFileName,
+    fs.constants.COPYFILE_FICLONE,
+    (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("datafile copied");
+      }
+    }
+  );
+}
+
+const localFileName = __dirname + "/../data/chat.json";
+const serverFileName = "/tmp/chat.json";
+
+function getFileName() {
+  const filename =
+    process.env.NODE_ENV === "prod" ? serverFileName : localFileName;
+  return filename;
 }
 
 module.exports = {
@@ -33,4 +58,6 @@ module.exports = {
   newDate,
   mustBeInArray,
   writeJSONFile,
+  copyLogFileToTemp,
+  getFileName,
 };

@@ -1,7 +1,5 @@
-const filename = __dirname + "/../data/chat.json";
-
-let chat = require(filename);
 const helper = require("../helpers/helper.js");
+let chat = require(helper.getFileName());
 
 function getEvents(chatId, userId) {
   return new Promise((resolve, reject) => {
@@ -32,7 +30,7 @@ function addEvent(type, evt) {
     const id = { id: helper.getNewId() };
     newEvent = { ...id, type, ...evt };
     chat[0].events.push(newEvent);
-    helper.writeJSONFile(filename, chat);
+    helper.writeJSONFile(chat);
     resolve(newEvent);
   });
 }
@@ -43,7 +41,7 @@ function deleteEvent(type, userId) {
       (p) => !(p.type === type && p.userId === userId)
     );
 
-    helper.writeJSONFile(filename, chat);
+    helper.writeJSONFile(chat);
     resolve();
   });
 }
@@ -52,7 +50,7 @@ function deleteEvents(eventIds) {
   return new Promise((resolve, reject) => {
     chat[0].events = chat[0].events.filter((p) => !eventIds.includes(p.id));
 
-    helper.writeJSONFile(filename, chat);
+    helper.writeJSONFile(chat);
     resolve();
   });
 }

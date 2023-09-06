@@ -1,12 +1,11 @@
-const filename = __dirname + "/../data/chat.json";
-
-let chat = require(filename);
 const helper = require("../helpers/helper.js");
 const chatModel = require("./chat.model.js");
 
 const mainStatuses = require("../messenger-types/src/main_statuses.js");
 const customStatuses = require("../messenger-types/src/custom_statuses");
 const EVENTS = require("../messenger-types/src/event_types.js");
+
+let chat = require(helper.getFileName());
 
 function login({ name, status, customStatus }) {
   return new Promise(async (resolve, reject) => {
@@ -79,7 +78,7 @@ function addUser(id) {
   return new Promise((resolve, reject) => {
     if (!chat[0].users.includes(id)) {
       chat[0].users.push(id);
-      helper.writeJSONFile(filename, chat);
+      helper.writeJSONFile(chat);
     }
     resolve();
   });
@@ -88,7 +87,7 @@ function addUser(id) {
 function removeUser(id) {
   return new Promise((resolve, reject) => {
     chat[0].users = chat[0].users.filter((uid) => uid !== id);
-    helper.writeJSONFile(filename, chat);
+    helper.writeJSONFile(chat);
     resolve();
   });
 }
