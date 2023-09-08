@@ -1,4 +1,5 @@
 const helper = require("../helpers/helper.js");
+const EVENT_TYPES = require("../messenger-types/src/event_types");
 let chat = require(helper.getFileName());
 
 function getEvents(chatId, userId) {
@@ -23,9 +24,12 @@ function getEvent(type, userId) {
 
 function addEvent(type, evt) {
   return new Promise((resolve, reject) => {
-    chat[0].events = chat[0].events.filter(
-      (p) => !(p.type === type && p.userId === evt.userId)
-    );
+    chat[0].events =
+      type !== EVENT_TYPES.sendMessage
+        ? chat[0].events.filter(
+            (p) => !(p.type === type && p.userId === evt.userId)
+          )
+        : chat[0].events;
 
     const id = { id: helper.getNewId() };
     newEvent = { ...id, type, ...evt };
