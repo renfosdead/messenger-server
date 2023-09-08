@@ -18,4 +18,10 @@ router.post("/change_status", async (req, res) => {
     .then((payload) => res.json(payload));
 });
 
+router.post("/change_custom_status", async (req, res) => {
+  await user
+    .changeCustomStatus(req.headers.chatid, req.headers.userid, req.body)
+    .then((payload) => res.json(payload));
+});
+
 module.exports = router;

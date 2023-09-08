@@ -74,6 +74,22 @@ function changeStatus(chatId, userId, { status }) {
   });
 }
 
+function changeCustomStatus(chatId, userId, { customStatus }) {
+  return new Promise(async (resolve, reject) => {
+    if (!customStatus) {
+      resolve({ error: "Wrong data" });
+    } else {
+      await chatModel.addEvent(EVENTS.changeCustomStatus, {
+        chatId,
+        userId,
+        customStatus,
+      });
+
+      resolve({ chatId, userId, customStatus });
+    }
+  });
+}
+
 function addUser(id) {
   return new Promise((resolve, reject) => {
     if (!chat[0].users.includes(id)) {
@@ -96,4 +112,5 @@ module.exports = {
   login,
   logout,
   changeStatus,
+  changeCustomStatus,
 };
