@@ -90,6 +90,22 @@ function changeCustomStatus(chatId, userId, { customStatus }) {
   });
 }
 
+function sendMessage(chatId, userId, { message }) {
+  return new Promise(async (resolve, reject) => {
+    if (!message) {
+      resolve({ error: "Wrong data" });
+    } else {
+      await chatModel.addEvent(EVENTS.sendMessage, {
+        chatId,
+        userId,
+        message,
+      });
+
+      resolve({ chatId, userId, message });
+    }
+  });
+}
+
 function addUser(id) {
   return new Promise((resolve, reject) => {
     if (!chat[0].users.includes(id)) {
@@ -113,4 +129,5 @@ module.exports = {
   logout,
   changeStatus,
   changeCustomStatus,
+  sendMessage,
 };

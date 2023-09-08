@@ -7,7 +7,7 @@ function getEvents(chatId, userId) {
       resolve({ error: "No data" });
     } else {
       const chatRoom = chat.find((e) => e.id === chatId);
-      resolve(chatRoom.events.filter((evt) => evt.userId !== userId));
+      resolve(chatRoom.events);
     }
   });
 }
