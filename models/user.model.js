@@ -106,6 +106,18 @@ function sendMessage(chatId, userId, { message }) {
   });
 }
 
+function changeName(chatId, userId, { name }) {
+  return new Promise(async (resolve, reject) => {
+    await chatModel.addEvent(EVENTS.changeName, {
+      chatId,
+      userId,
+      name,
+    });
+
+    resolve({ chatId, userId, name });
+  });
+}
+
 function addUser(id) {
   return new Promise((resolve, reject) => {
     if (!chat[0].users.includes(id)) {
@@ -130,4 +142,5 @@ module.exports = {
   changeStatus,
   changeCustomStatus,
   sendMessage,
+  changeName,
 };

@@ -19,4 +19,16 @@ router.get("/", async (req, res) => {
     });
 });
 
+router.get("/get", async (req, res) => {
+  await chat
+    .getFullChat(req.headers.chatid, req.headers.userid)
+    .then((chat) => res.json(chat));
+});
+
+router.delete("/clear", async (req, res) => {
+  await chat
+    .clearFullChat(req.headers.chatid, req.headers.userid)
+    .then((chat) => res.json(chat));
+});
+
 module.exports = router;

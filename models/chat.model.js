@@ -2,6 +2,34 @@ const helper = require("../helpers/helper.js");
 const EVENT_TYPES = require("../messenger-types/src/event_types");
 let chat = require(helper.getFileName());
 
+function getFullChat(chatId, userId) {
+  return new Promise((resolve, reject) => {
+    if (!chatId || !userId) {
+      resolve({ error: "No data" });
+    } else {
+      resolve(chat);
+    }
+  });
+}
+
+function clearFullChat(chatId, userId) {
+  return new Promise((resolve, reject) => {
+    if (!chatId || !userId) {
+      resolve({ error: "No data" });
+    } else {
+      chat = [
+        {
+          id: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+          users: [],
+          events: [],
+        },
+      ];
+      helper.writeJSONFile(chat);
+      resolve(chat);
+    }
+  });
+}
+
 function getEvents(chatId, userId) {
   return new Promise((resolve, reject) => {
     if (!chatId || !userId) {
@@ -65,4 +93,6 @@ module.exports = {
   getEvent,
   deleteEvent,
   deleteEvents,
+  getFullChat,
+  clearFullChat,
 };
