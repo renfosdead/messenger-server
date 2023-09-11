@@ -60,7 +60,7 @@ function addEvent(type, evt) {
         : chat[0].events;
 
     const id = { id: helper.getNewId() };
-    newEvent = { ...id, type, ...evt };
+    newEvent = { ...id, type, ...evt, date: Date.now() };
     chat[0].events.push(newEvent);
     helper.writeJSONFile(chat);
     resolve(newEvent);
