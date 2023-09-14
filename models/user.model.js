@@ -1,146 +1,30 @@
-const helper = require("../helpers/helper.js");
-const chatModel = require("./chat.model.js");
+const FileHelper = require("../helpers/file.js");
 
-const mainStatuses = require("../messenger-types/src/main_statuses.js");
-const customStatuses = require("../messenger-types/src/custom_statuses");
-const EVENTS = require("../messenger-types/src/event_types.js");
-
-let chat = require(helper.getFileName());
-
-function login({ name, status, customStatus }) {
-  return new Promise(async (resolve, reject) => {
-    if (!name || !status || !customStatus || !mainStatuses.includes(status)) {
-      resolve({ error: "Wrong data" });
-    } else {
-      const chatId = chat[0].id;
-      const userId = helper.getNewId();
-
-      await addUser(userId);
-
-      await chatModel.addEvent(EVENTS.changeName, {
-        chatId,
-        userId,
-        name,
-      });
-      await chatModel.addEvent(EVENTS.changeStatus, {
-        chatId,
-        userId,
-        status,
-      });
-      await chatModel.addEvent(EVENTS.changeCustomStatus, {
-        chatId,
-        userId,
-        customStatus,
-      });
-
-      resolve({ chatId, userId });
-    }
-  });
-}
-
-function logout(chatId, userId) {
-  return new Promise(async (resolve, reject) => {
-    if (!userId) {
-      resolve({ error: "User is not logged in" });
-    } else {
-      await removeUser(userId);
-
-      await chatModel.deleteEvent(EVENTS.changeName, userId);
-      await chatModel.deleteEvent(EVENTS.changeCustomStatus, userId);
-      await chatModel.addEvent(EVENTS.changeStatus, {
-        chatId,
-        userId,
-        status: "offline",
-      });
-
-      resolve({ user: userId });
-    }
-  });
-}
-
-function changeStatus(chatId, userId, { status }) {
-  return new Promise(async (resolve, reject) => {
-    if (!status) {
-      resolve({ error: "Wrong data" });
-    } else {
-      await chatModel.addEvent(EVENTS.changeStatus, {
-        chatId,
-        userId,
-        status,
-      });
-
-      resolve({ chatId, userId, status });
-    }
-  });
-}
-
-function changeCustomStatus(chatId, userId, { customStatus }) {
-  return new Promise(async (resolve, reject) => {
-    if (!customStatus) {
-      resolve({ error: "Wrong data" });
-    } else {
-      await chatModel.addEvent(EVENTS.changeCustomStatus, {
-        chatId,
-        userId,
-        customStatus,
-      });
-
-      resolve({ chatId, userId, customStatus });
-    }
-  });
-}
-
-function sendMessage(chatId, userId, { message }) {
-  return new Promise(async (resolve, reject) => {
-    if (!message) {
-      resolve({ error: "Wrong data" });
-    } else {
-      await chatModel.addEvent(EVENTS.sendMessage, {
-        chatId,
-        userId,
-        message,
-      });
-
-      resolve({ chatId, userId, message });
-    }
-  });
-}
-
-function changeName(chatId, userId, { name }) {
-  return new Promise(async (resolve, reject) => {
-    await chatModel.addEvent(EVENTS.changeName, {
-      chatId,
-      userId,
-      name,
-    });
-
-    resolve({ chatId, userId, name });
-  });
-}
+let chat = require(FileHelper.getFileName());
 
 function addUser(id) {
-  return new Promise((resolve, reject) => {
-    if (!chat[0].users.includes(id)) {
-      chat[0].users.push(id);
-      helper.writeJSONFile(chat);
-    }
-    resolve();
-  });
+  if (!chat[0].users.includes(id)) {
+    chat[0].users.push(id);
+    FileHelper.writeJSONFile(chat);
+  }
+  return Promise.resolve();
 }
 
 function removeUser(id) {
-  return new Promise((resolve, reject) => {
-    chat[0].users = chat[0].users.filter((uid) => uid !== id);
-    helper.writeJSONFile(chat);
-    resolve();
-  });
+  chat[0].users = chat[0].users.filter((uid) => uid !== id);
+  FileHelper.writeJSONFile(chat);
+  return Promise.resolve();
 }
 
+const getUser = (userId) => {
+  if (chat[0].users.includes(userId)) {
+    return Promise.resolve(userId);
+  }
+  return Promise.resolve(null);
+};
+
 module.exports = {
-  login,
-  logout,
-  changeStatus,
-  changeCustomStatus,
-  sendMessage,
-  changeName,
+  addUser,
+  removeUser,
+  getUser,
 };

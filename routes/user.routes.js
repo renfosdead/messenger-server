@@ -1,39 +1,44 @@
 const express = require("express");
 const router = express.Router();
-const user = require("../models/user.model");
+const UserController = require("../controllers/user.controller");
+const UserMiddleware = require("../middlewares/user.middleware");
 
-router.post("/login", async (req, res) => {
-  await user.login(req.body).then((payload) => res.json(payload));
+router.post("/login", UserMiddleware.isCorrectLoginFields, async (req, res) => {
+  await UserController.login(req)
+    .then((payload) => res.json(payload))
+    .catch((err) => res.json(err));
 });
 
 router.get("/logout", async (req, res) => {
-  await user
-    .logout(req.headers.chatid, req.headers.userid)
-    .then((payload) => res.json(payload));
+  await UserController.logout(req)
+    .then((payload) => res.json(payload))
+    .catch((err) => res.json(err));
 });
 
-router.post("/name", async (req, res) => {
-  await user
-    .changeName(req.headers.chatid, req.headers.userid, req.body)
-    .then((payload) => res.json(payload));
+router.post("/name", UserMiddleware.isCorrectNameFields, async (req, res) => {
+  await UserController.changeName(req)
+    .then((payload) => res.json(payload))
+    .catch((err) => res.json(err));
 });
 
-router.post("/change_status", async (req, res) => {
-  await user
-    .changeStatus(req.headers.chatid, req.headers.userid, req.body)
-    .then((payload) => res.json(payload));
-});
+router.post(
+  "/change_status",
+  UserMiddleware.isCorrectStatusFields,
+  async (req, res) => {
+    await UserController.changeStatus(req)
+      .then((payload) => res.json(payload))
+      .catch((err) => res.json(err));
+  }
+);
 
-router.post("/change_custom_status", async (req, res) => {
-  await user
-    .changeCustomStatus(req.headers.chatid, req.headers.userid, req.body)
-    .then((payload) => res.json(payload));
-});
-
-router.post("/message", async (req, res) => {
-  await user
-    .sendMessage(req.headers.chatid, req.headers.userid, req.body)
-    .then((payload) => res.json(payload));
-});
+router.post(
+  "/change_custom_status",
+  UserMiddleware.isCorrectCustomStatusFields,
+  async (req, res) => {
+    await UserController.changeCustomStatus(req)
+      .then((payload) => res.json(payload))
+      .catch((err) => res.json(err));
+  }
+);
 
 module.exports = router;

@@ -1,6 +1,6 @@
-const helper = require("./helpers/helper.js");
+const FileHelper = require("./helpers/file.js");
 if (process.env.NODE_ENV === "prod") {
-  helper.copyLogFileToTemp();
+  FileHelper.copyLogFileToTemp();
 }
 
 const express = require("express");
