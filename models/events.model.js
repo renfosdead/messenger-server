@@ -25,7 +25,7 @@ function addEvent(type, evt) {
     }
   });
 
-  newEvent = { id, type, date: Date.now(), addresses: chat[0].users, ...evt };
+  newEvent = { id, type, date: Date.now(), addresses, ...evt };
   chat[0].events.push(newEvent);
   FileHelper.writeJSONFile(chat);
   return Promise.resolve(newEvent);
