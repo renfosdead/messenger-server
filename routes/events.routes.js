@@ -4,9 +4,12 @@ const EventsController = require("../controllers/events.controller");
 const EventsMiddleware = require("../middlewares/events.middleware");
 
 router.get("/", async (req, res) => {
-  EventsController.getEvents(req)
-    .then((res) => res.json(events))
-    .catch((err) => res.json(err));
+  await EventsController.getEvents(req)
+    .then((events) => res.json(events))
+    .catch((err) => {
+      console.log(err);
+      return res.json(err);
+    });
 });
 
 router.post(
@@ -15,7 +18,10 @@ router.post(
   async (req, res) => {
     EventsController.sendMessage(req)
       .then((payload) => res.json(payload))
-      .catch((err) => res.json(err));
+      .catch((err) => {
+        console.log(err);
+        return res.json(err);
+      });
   }
 );
 

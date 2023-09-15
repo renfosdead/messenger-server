@@ -1,17 +1,13 @@
 const RequestHelper = require("../helpers/request.js");
 
 const EventsModel = require("../models/events.model.js");
+const EVENT_TYPES = require("../messenger-types/src/event_types.js");
 
 function getEvents(req) {
   return RequestHelper.isCorrectHeaders(req).then(async () => {
-    const { chatId } = RequestHelper.getRequestParams(req);
+    const { userId, chatId } = RequestHelper.getRequestParams(req);
     const chatEvents = await EventsModel.getEvents(chatId);
-
-    await EventsModel.deleteEvents(
-      (chatEvents || [])
-        .filter((e) => e.type !== EVENT_TYPES.sendMessage)
-        .map((e) => e.id)
-    );
+    await EventsModel.readEvents(userId, chatEvents || []);
     return Promise.resolve(chatEvents);
   });
 }
@@ -21,7 +17,7 @@ function sendMessage(req) {
     const { userId, chatId } = RequestHelper.getRequestParams(req);
     const { message } = req.body;
 
-    await EventsModel.addEvent(EVENTS.sendMessage, {
+    await EventsModel.addEvent(EVENT_TYPES.sendMessage, {
       chatId,
       userId,
       message,

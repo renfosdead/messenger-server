@@ -10,12 +10,6 @@ function addUser(id) {
   return Promise.resolve();
 }
 
-function removeUser(id) {
-  chat[0].users = chat[0].users.filter((uid) => uid !== id);
-  FileHelper.writeJSONFile(chat);
-  return Promise.resolve();
-}
-
 const getUser = (userId) => {
   if (chat[0].users.includes(userId)) {
     return Promise.resolve(userId);
@@ -25,6 +19,5 @@ const getUser = (userId) => {
 
 module.exports = {
   addUser,
-  removeUser,
   getUser,
 };

@@ -6,19 +6,28 @@ const UserMiddleware = require("../middlewares/user.middleware");
 router.post("/login", UserMiddleware.isCorrectLoginFields, async (req, res) => {
   await UserController.login(req)
     .then((payload) => res.json(payload))
-    .catch((err) => res.json(err));
+    .catch((err) => {
+      console.log(err);
+      return res.json(err);
+    });
 });
 
 router.get("/logout", async (req, res) => {
   await UserController.logout(req)
     .then((payload) => res.json(payload))
-    .catch((err) => res.json(err));
+    .catch((err) => {
+      console.log(err);
+      return res.json(err);
+    });
 });
 
 router.post("/name", UserMiddleware.isCorrectNameFields, async (req, res) => {
   await UserController.changeName(req)
     .then((payload) => res.json(payload))
-    .catch((err) => res.json(err));
+    .catch((err) => {
+      console.log(err);
+      return res.json(err);
+    });
 });
 
 router.post(
@@ -27,7 +36,10 @@ router.post(
   async (req, res) => {
     await UserController.changeStatus(req)
       .then((payload) => res.json(payload))
-      .catch((err) => res.json(err));
+      .catch((err) => {
+        console.log(err);
+        return res.json(err);
+      });
   }
 );
 
@@ -37,7 +49,10 @@ router.post(
   async (req, res) => {
     await UserController.changeCustomStatus(req)
       .then((payload) => res.json(payload))
-      .catch((err) => res.json(err));
+      .catch((err) => {
+        console.log(err);
+        return res.json(err);
+      });
   }
 );
 

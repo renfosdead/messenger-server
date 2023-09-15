@@ -9,13 +9,18 @@ const EVENTS = require("../messenger-types/src/event_types.js");
 
 async function login(req) {
   return new Promise(async (resolve, reject) => {
-    const { name, status, customStatus } = req.body;
+    const { chatid, userid } = req.headers;
 
-    const chatId = await ChatModel.getChatId();
+    const chatExisted = await ChatModel.getChat(chatid);
+    const chatId = chatExisted ? chatid : await ChatModel.getChatId();
 
-    const userId = DataHelper.getNewId();
+    const userExisted = await UserModel.getUser(userid);
+    const userId = userExisted ? userid : DataHelper.getNewId();
 
     await UserModel.addUser(userId);
+    await EventsModel.refreshEventAddresses(userId);
+
+    const { name, status, customStatus } = req.body;
 
     await EventsModel.addEvent(EVENTS.changeName, {
       chatId,
@@ -37,22 +42,20 @@ async function login(req) {
   });
 }
 
-function logout(req) {
-  return RequestHelper.isCorrectHeaders(req).then(async () => {
-    const { userId, chatId } = RequestHelper.getRequestParams(req);
+async function logout(req) {
+  const { userId, chatId } = RequestHelper.getRequestParams(req);
 
-    await UserModel.removeUser(userId);
-
-    await EventsModel.deleteEvent(EVENTS.changeName, userId);
-    await EventsModel.deleteEvent(EVENTS.changeCustomStatus, userId);
+  await EventsModel.deleteEvent(EVENTS.changeName, userId);
+  await EventsModel.deleteEvent(EVENTS.changeCustomStatus, userId);
+  if (userId) {
     await EventsModel.addEvent(EVENTS.changeStatus, {
       chatId,
       userId,
       status: "offline",
     });
+  }
 
-    return Promise.resolve({ user: userId });
-  });
+  return Promise.resolve({ user: userId });
 }
 
 function changeStatus(req) {
