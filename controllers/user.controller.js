@@ -9,13 +9,13 @@ const EVENTS = require("../messenger-types/src/event_types.js");
 
 async function login(req) {
   return new Promise(async (resolve, reject) => {
-    const { chatid, userid } = req.headers;
+    let { chatId, userId } = RequestHelper.getRequestParams(req);
 
-    const chatExisted = await ChatModel.getChat(chatid);
-    const chatId = chatExisted ? chatid : await ChatModel.getChatId();
+    const chatExisted = await ChatModel.getChat(chatId);
+    chatId = chatExisted ? chatId : await ChatModel.getChatId();
 
-    const userExisted = await UserModel.getUser(userid);
-    const userId = userExisted ? userid : DataHelper.getNewId();
+    const userExisted = await UserModel.getUser(userId);
+    userId = userExisted ? userId : DataHelper.getNewId();
 
     await UserModel.addUser(userId);
     await EventsModel.refreshEventAddresses(userId);
@@ -38,7 +38,11 @@ async function login(req) {
       customStatus,
     });
 
-    resolve({ chatId, userId });
+    resolve({
+      chatId,
+      userId,
+      token: RequestHelper.getToken({ chatId, userId }),
+    });
   });
 }
 
