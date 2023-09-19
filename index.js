@@ -6,6 +6,7 @@ if (process.env.NODE_ENV === "prod") {
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const nocache = require("nocache");
 
 const app = express();
 
@@ -24,5 +25,6 @@ app.use(require("./routes/index.routes"));
 app.get("/", (req, res) => {
   res.json({ message: "Hello world" });
 });
+app.use(nocache());
 
 app.listen("1337");
