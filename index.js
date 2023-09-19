@@ -26,5 +26,6 @@ app.get("/", (req, res) => {
   res.json({ message: "Hello world" });
 });
 app.use(nocache());
+app.disable("view cache");
 
 app.listen("1337");
