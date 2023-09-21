@@ -22,6 +22,8 @@ async function isCorrectHeaders(req) {
           chatId,
           userId,
         });
+      } else {
+        throw "err";
       }
     }
   } catch (err) {
