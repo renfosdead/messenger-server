@@ -63,51 +63,54 @@ async function logout(req) {
 }
 
 function changeStatus(req) {
-  return RequestHelper.isCorrectHeaders(req).then(async () => {
-    const { userId, chatId } = RequestHelper.getRequestParams(req);
-    const { status } = req.body;
+  return RequestHelper.isCorrectHeaders(req).then(
+    async ({ userId, chatId }) => {
+      const { status } = req.body;
 
-    await EventsModel.addEvent(EVENTS.changeStatus, {
-      chatId,
-      userId,
-      status,
-    });
+      await EventsModel.addEvent(EVENTS.changeStatus, {
+        chatId,
+        userId,
+        status,
+      });
 
-    return Promise.resolve({ chatId, userId, status });
-  });
+      return Promise.resolve({ chatId, userId, status });
+    }
+  );
 }
 
 function changeCustomStatus(req) {
-  return RequestHelper.isCorrectHeaders(req).then(async () => {
-    const { userId, chatId } = RequestHelper.getRequestParams(req);
-    const { customStatus } = req.body;
+  return RequestHelper.isCorrectHeaders(req).then(
+    async ({ userId, chatId }) => {
+      const { customStatus } = req.body;
 
-    if (!customStatus) {
-      return Promise.resolve({ error: "Wrong data" });
-    } else {
-      await EventsModel.addEvent(EVENTS.changeCustomStatus, {
-        chatId,
-        userId,
-        customStatus,
-      });
+      if (!customStatus) {
+        return Promise.resolve({ error: "Wrong data" });
+      } else {
+        await EventsModel.addEvent(EVENTS.changeCustomStatus, {
+          chatId,
+          userId,
+          customStatus,
+        });
 
-      return Promise.resolve({ chatId, userId, customStatus });
+        return Promise.resolve({ chatId, userId, customStatus });
+      }
     }
-  });
+  );
 }
 
 function changeName(req) {
-  return RequestHelper.isCorrectHeaders(req).then(async () => {
-    const { userId, chatId } = RequestHelper.getRequestParams(req);
-    const { name } = req.body;
-    await EventsModel.addEvent(EVENTS.changeName, {
-      chatId,
-      userId,
-      name,
-    });
+  return RequestHelper.isCorrectHeaders(req).then(
+    async ({ userId, chatId }) => {
+      const { name } = req.body;
+      await EventsModel.addEvent(EVENTS.changeName, {
+        chatId,
+        userId,
+        name,
+      });
 
-    return Promise.resolve({ chatId, userId, name });
-  });
+      return Promise.resolve({ chatId, userId, name });
+    }
+  );
 }
 
 module.exports = {

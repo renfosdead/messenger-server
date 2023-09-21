@@ -6,26 +6,26 @@ const jwt_decode = require("jwt-decode");
 const tokenKey = process.env.NODE_TOKEN_KEY;
 
 async function isCorrectHeaders(req) {
-  if (req.headers.authorization) {
-    jwt.verify(req.headers.authorization, tokenKey, async (err, payload) => {
-      if (err) {
-        throw { error: "Wrong headers" };
-      } else if (payload) {
-        const { chatId, userId } = jwt_decode(req.headers.authorization);
-        if (
-          chatId &&
-          userId &&
-          typeof chatId === "string" &&
-          typeof userId === "string"
-        ) {
-          const chatExisted = await ChatModel.getChat(chatId);
-          const userExisted = await UserModel.getUser(userId);
-          if (chatExisted && userExisted) {
-            return Promise.resolve(chatExisted && userExisted);
-          }
-        }
+  try {
+    const decoded = jwt.verify(req.headers.authorization, tokenKey);
+    const { chatId, userId } = decoded;
+    if (
+      chatId &&
+      userId &&
+      typeof chatId === "string" &&
+      typeof userId === "string"
+    ) {
+      const chatExisted = await ChatModel.getChat(chatId);
+      const userExisted = await UserModel.getUser(userId);
+      if (chatExisted && userExisted) {
+        return Promise.resolve({
+          chatId,
+          userId,
+        });
       }
-    });
+    }
+  } catch (err) {
+    return Promise.reject({ error: "Wrong headers" });
   }
 }
 

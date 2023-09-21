@@ -4,27 +4,29 @@ const EventsModel = require("../models/events.model.js");
 const EVENT_TYPES = require("../messenger-types/src/event_types.js");
 
 function getEvents(req) {
-  return RequestHelper.isCorrectHeaders(req).then(async () => {
-    const { userId, chatId } = RequestHelper.getRequestParams(req);
-    const chatEvents = await EventsModel.getEvents(chatId);
-    await EventsModel.readEvents(userId, chatEvents || []);
-    return Promise.resolve(chatEvents);
-  });
+  return RequestHelper.isCorrectHeaders(req).then(
+    async ({ userId, chatId }) => {
+      const chatEvents = await EventsModel.getEvents(chatId);
+      await EventsModel.readEvents(userId, chatEvents || []);
+      return Promise.resolve(chatEvents);
+    }
+  );
 }
 
 function sendMessage(req) {
-  return RequestHelper.isCorrectHeaders(req).then(async () => {
-    const { userId, chatId } = RequestHelper.getRequestParams(req);
-    const { message } = req.body;
+  return RequestHelper.isCorrectHeaders(req).then(
+    async ({ userId, chatId }) => {
+      const { message } = req.body;
 
-    await EventsModel.addEvent(EVENT_TYPES.sendMessage, {
-      chatId,
-      userId,
-      message,
-    });
+      await EventsModel.addEvent(EVENT_TYPES.sendMessage, {
+        chatId,
+        userId,
+        message,
+      });
 
-    return Promise.resolve({ chatId, userId, message });
-  });
+      return Promise.resolve({ chatId, userId, message });
+    }
+  );
 }
 
 module.exports = {
