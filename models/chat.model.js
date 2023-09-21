@@ -1,24 +1,26 @@
 const FileHelper = require("../helpers/file.js");
 
-let chat = require(FileHelper.getFileName());
-
 function getFullChat() {
+  const chat = FileHelper.getChatData();
+
   return Promise.resolve(chat);
 }
 
 function clearFullChat() {
-  chat = [
+  const chat = FileHelper.getChatData();
+  const payload = [
     {
       id: chat[0].id,
       users: [],
       events: [],
     },
   ];
-  FileHelper.writeJSONFile(chat);
-  return Promise.resolve(chat);
+  FileHelper.writeJSONFile(payload);
+  return Promise.resolve(payload);
 }
 
 const getChat = (chatId) => {
+  const chat = FileHelper.getChatData();
   const tab = chat.find((item) => item.id === chatId);
   if (tab) {
     return Promise.resolve(tab);
@@ -26,7 +28,11 @@ const getChat = (chatId) => {
   return Promise.resolve(null);
 };
 
-const getChatId = () => Promise.resolve(chat[0].id);
+const getChatId = () => {
+  const chat = FileHelper.getChatData();
+
+  return Promise.resolve(chat[0].id);
+};
 
 exports.getChat = getChat;
 exports.getFullChat = getFullChat;

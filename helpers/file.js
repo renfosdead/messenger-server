@@ -33,8 +33,13 @@ const getFileName = () => {
   return filename;
 };
 
+const getChatData = () => {
+  const data = fs.readFileSync(getFileName(), "utf8");
+  return JSON.parse(data);
+};
+
 module.exports = {
   writeJSONFile,
   copyLogFileToTemp,
-  getFileName,
+  getChatData,
 };

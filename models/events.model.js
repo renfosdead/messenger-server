@@ -1,13 +1,15 @@
 const FileHelper = require("../helpers/file.js");
 const DataHelper = require("../helpers/data.js");
 
-let chat = require(FileHelper.getFileName());
-
 function getEvents() {
+  const chat = FileHelper.getChatData();
+
   return Promise.resolve(chat[0].events);
 }
 
 function getEvent(type, userId) {
+  const chat = FileHelper.getChatData();
+
   const evt = chat[0].events.find(
     (e) => e.type === type && e.userId === userId
   );
@@ -15,6 +17,8 @@ function getEvent(type, userId) {
 }
 
 function addEvent(type, evt) {
+  const chat = FileHelper.getChatData();
+
   const id = DataHelper.getNewId();
   const addresses = ["-", "-"];
   chat[0].users.forEach((uid, i) => {
@@ -32,6 +36,8 @@ function addEvent(type, evt) {
 }
 
 function refreshEventAddresses(newUser) {
+  const chat = FileHelper.getChatData();
+
   const evts = chat[0].events;
   evts.forEach((evt) => {
     if (!evt.addresses.includes(newUser)) {
@@ -49,6 +55,8 @@ function refreshEventAddresses(newUser) {
 }
 
 function readEvents(userId, events) {
+  const chat = FileHelper.getChatData();
+
   const resultEvents = [];
 
   const readedEventsIds = events.map((e) => e.id);
@@ -71,6 +79,8 @@ function readEvents(userId, events) {
 }
 
 function deleteEvent(type, userId) {
+  const chat = FileHelper.getChatData();
+
   chat[0].events = chat[0].events.filter(
     (p) => !(p.type === type && p.userId === userId)
   );
