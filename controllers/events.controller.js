@@ -21,7 +21,7 @@ function sendMessage(req) {
       await EventsModel.addEvent(EVENT_TYPES.sendMessage, {
         chatId,
         userId,
-        message,
+        body: { message },
       });
 
       return Promise.resolve({ chatId, userId, message });

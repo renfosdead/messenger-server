@@ -25,17 +25,17 @@ async function login(req) {
     await EventsModel.addEvent(EVENTS.changeName, {
       chatId,
       userId,
-      name,
+      body: { name },
     });
     await EventsModel.addEvent(EVENTS.changeStatus, {
       chatId,
       userId,
-      status,
+      body: { status },
     });
     await EventsModel.addEvent(EVENTS.changeCustomStatus, {
       chatId,
       userId,
-      customStatus,
+      body: { customStatus },
     });
 
     resolve({
@@ -55,7 +55,7 @@ async function logout(req) {
     await EventsModel.addEvent(EVENTS.changeStatus, {
       chatId,
       userId,
-      status: "offline",
+      body: { status: "offline" },
     });
   }
 
@@ -70,7 +70,7 @@ function changeStatus(req) {
       await EventsModel.addEvent(EVENTS.changeStatus, {
         chatId,
         userId,
-        status,
+        body: { status },
       });
 
       return Promise.resolve({ chatId, userId, status });
@@ -89,7 +89,7 @@ function changeCustomStatus(req) {
         await EventsModel.addEvent(EVENTS.changeCustomStatus, {
           chatId,
           userId,
-          customStatus,
+          body: { customStatus },
         });
 
         return Promise.resolve({ chatId, userId, customStatus });
@@ -105,7 +105,7 @@ function changeName(req) {
       await EventsModel.addEvent(EVENTS.changeName, {
         chatId,
         userId,
-        name,
+        body: { name },
       });
 
       return Promise.resolve({ chatId, userId, name });
