@@ -3,6 +3,9 @@ if (process.env.NODE_ENV === "prod") {
   FileHelper.copyLogFileToTemp();
 }
 
+const DBHelper = require("./helpers/db.js");
+DBHelper.dbMigrate();
+
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
