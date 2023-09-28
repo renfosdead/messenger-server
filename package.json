@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node_modules/.bin/nodemon -r dotenv/config ./index.js",
+    "dev": "node_modules/.bin/nodemon -r dotenv/config --inspect ./index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "drizzle-kit generate:pg"
   },

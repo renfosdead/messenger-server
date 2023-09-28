@@ -1,10 +1,5 @@
-const FileHelper = require("./helpers/file.js");
-if (process.env.NODE_ENV === "prod") {
-  FileHelper.copyLogFileToTemp();
-}
-
-const DBHelper = require("./helpers/db.js");
-DBHelper.dbMigrate();
+const MigrationHelper = require("./data/migrate.js");
+MigrationHelper.dbMigrate();
 
 const express = require("express");
 const morgan = require("morgan");

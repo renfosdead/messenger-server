@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "c7a141b9-4356-44a4-b4b8-7a0c611bab77",
+  "id": "587884e4-2755-4dbd-8e22-3aede3771307",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "addresses": {
@@ -22,7 +22,7 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "uuid",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         }
@@ -35,19 +35,6 @@
           "tableTo": "chat_events",
           "columnsFrom": [
             "event_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "addresses_user_id_user_id_fk": {
-          "name": "addresses_user_id_user_id_fk",
-          "tableFrom": "addresses",
-          "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
           ],
           "columnsTo": [
             "id"
@@ -93,7 +80,7 @@
         },
         "date": {
           "name": "date",
-          "type": "timestamp",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },

@@ -17,7 +17,7 @@ async function login(req) {
     const userExisted = await UserModel.getUser(userId);
     userId = userExisted ? userId : DataHelper.getNewId();
 
-    await UserModel.addUser(userId);
+    await UserModel.addUser(chatId, userId);
     await EventsModel.refreshEventAddresses(userId);
 
     const { name, status, customStatus } = req.body;
