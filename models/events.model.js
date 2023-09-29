@@ -141,7 +141,11 @@ async function deleteEvent(type, userId) {
       .filter((addr) => addr.event)
       .map(({ id }) => id);
 
-    await tx.delete(addresses).where(inArray(addresses.id, addressesToRemove));
+    if (addressesToRemove.length) {
+      await tx
+        .delete(addresses)
+        .where(inArray(addresses.id, addressesToRemove));
+    }
 
     await tx
       .delete(chatEvents)
