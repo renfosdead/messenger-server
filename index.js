@@ -1,5 +1,5 @@
-const MigrationHelper = require("./data/migrate.js");
-MigrationHelper.dbMigrate();
+// const MigrationHelper = require("./data/migrate.js");
+// MigrationHelper.dbMigrate();
 
 const express = require("express");
 const morgan = require("morgan");

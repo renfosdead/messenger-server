@@ -9,7 +9,7 @@ const db =
     ? DrizzleVercel.drizzle(Vercel.sql, { schema })
     : DrizzleNode.drizzle(
         new pg.Pool({
-          connectionString: process.env.POSTGRES_URL + "?sslmode=require",
+          connectionString: process.env.POSTGRES_URL,
         }),
         { schema }
       );
