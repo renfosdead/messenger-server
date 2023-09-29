@@ -6,9 +6,11 @@ const schema = require("../schema");
 
 const db =
   process.env.NODE_ENV === "prod"
-    ? DrizzleVercel.drizzle(Vercel.sql)
+    ? DrizzleVercel.drizzle(Vercel.sql, { schema })
     : DrizzleNode.drizzle(
-        new pg.Pool({ connectionString: process.env.POSTGRES_URL }),
+        new pg.Pool({
+          connectionString: process.env.POSTGRES_URL + "?sslmode=require",
+        }),
         { schema }
       );
 
