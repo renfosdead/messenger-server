@@ -4,6 +4,7 @@ const RequestHelper = require("../helpers/request.js");
 const UserModel = require("../models/user.model.js");
 const ChatModel = require("../models/chat.model.js");
 const EventsModel = require("../models/events.model.js");
+const PushModel = require("../models/push.model.js");
 
 const EVENTS = require("../messenger-types/src/event_types.js");
 
@@ -38,6 +39,8 @@ async function login(req) {
       body: { customStatus },
     });
 
+    await PushModel.createUser(userId);
+
     resolve({
       chatId,
       userId,
@@ -49,9 +52,10 @@ async function login(req) {
 async function logout(req) {
   const { userId, chatId } = RequestHelper.getRequestParams(req);
 
-  await EventsModel.deleteEvent(EVENTS.changeName, userId);
-  await EventsModel.deleteEvent(EVENTS.changeCustomStatus, userId);
   if (userId) {
+    await EventsModel.deleteEvent(EVENTS.changeName, userId);
+    await EventsModel.deleteEvent(EVENTS.changeCustomStatus, userId);
+    await PushModel.removeUser(userId);
     await EventsModel.addEvent(EVENTS.changeStatus, {
       chatId,
       userId,

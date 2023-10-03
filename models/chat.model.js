@@ -16,7 +16,12 @@ async function getFullChat() {
 async function clearFullChat() {
   await db.delete(addresses);
   await db.delete(chatEvents);
-  await db.delete(user);
+  const deletedUsers = await db.delete(user).returning({ id: user.id });
+
+  const promises = [];
+  deletedUsers.forEach(({ id }) => promises.push(removeUser(id)));
+
+  await Promise.all(promises);
   const chat = await getFullChat();
   return Promise.resolve(chat);
 }

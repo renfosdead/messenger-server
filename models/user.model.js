@@ -25,7 +25,15 @@ const getUser = async (userId) => {
   return Promise.resolve(null);
 };
 
+const getChatUsers = async (chatId) => {
+  const usersResult = await db.query.user.findMany({
+    where: eq(user.chatId, chatId),
+  });
+  return Promise.resolve(usersResult);
+};
+
 module.exports = {
   addUser,
   getUser,
+  getChatUsers,
 };
