@@ -14,6 +14,7 @@ const createUser = async (userId) => {
       },
       identity: { external_id: userId },
     });
+    await createSubscription(userId);
     if (res) {
       console.log("OneSignal User created successful:", res);
       return Promise.resolve();
@@ -24,9 +25,22 @@ const createUser = async (userId) => {
   }
 };
 
+const createSubscription = async (userId) => {
+  return client.createSubscription(
+    process.env.NODE_ONE_SIGNAL_APP_ID,
+    "external_id",
+    userId,
+    {
+      subscription: {
+        type: "AndroidPush",
+      },
+    }
+  );
+};
+
 const removeUser = async (userId) => {
   try {
-    const res = await client.deleteUser(
+    await client.deleteUser(
       process.env.NODE_ONE_SIGNAL_APP_ID,
       "external_id",
       userId
