@@ -63,7 +63,7 @@ const pushNewMessage = async (event, addresses) => {
       return Promise.resolve();
     }
   } catch (err) {
-    console.log("Push error:", error);
+    console.log("Push error:", err, addresses);
     return Promise.resolve();
   }
 };
