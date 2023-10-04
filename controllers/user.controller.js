@@ -21,7 +21,7 @@ async function login(req) {
     await UserModel.addUser(chatId, userId);
     await EventsModel.refreshEventAddresses(userId);
 
-    const { name, status, customStatus } = req.body;
+    const { name, status, customStatus, deviceToken } = req.body;
 
     await EventsModel.addEvent(EVENTS.changeName, {
       chatId,
@@ -38,9 +38,9 @@ async function login(req) {
       userId,
       body: { customStatus },
     });
-
-    await PushModel.createUser(userId);
-
+    if (deviceToken) {
+      await PushModel.createUser(userId, deviceToken);
+    }
     resolve({
       chatId,
       userId,

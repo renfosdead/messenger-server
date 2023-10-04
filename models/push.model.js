@@ -6,7 +6,7 @@ const configuration = OneSignal.createConfiguration({
 
 const client = new OneSignal.DefaultApi(configuration);
 
-const createUser = async (userId) => {
+const createUser = async (userId, deviceToken) => {
   try {
     const res = await client.createUser(process.env.NODE_ONE_SIGNAL_APP_ID, {
       properties: {
@@ -14,7 +14,7 @@ const createUser = async (userId) => {
       },
       identity: { external_id: userId },
     });
-    await createSubscription(userId);
+    await createSubscription(userId, deviceToken);
     if (res) {
       console.log("OneSignal User created successful:", res);
       return Promise.resolve();
@@ -25,7 +25,7 @@ const createUser = async (userId) => {
   }
 };
 
-const createSubscription = async (userId) => {
+const createSubscription = async (userId, deviceToken) => {
   return client.createSubscription(
     process.env.NODE_ONE_SIGNAL_APP_ID,
     "external_id",
@@ -33,6 +33,7 @@ const createSubscription = async (userId) => {
     {
       subscription: {
         type: "AndroidPush",
+        token: deviceToken,
       },
     }
   );
@@ -48,7 +49,7 @@ const removeUser = async (userId) => {
     console.log("OneSignal User deleted successful");
     return Promise.resolve();
   } catch (err) {
-    console.log("OneSignal User delete failed:", err);
+    console.log("OneSignal User delete failed");
     return Promise.resolve();
   }
 };
