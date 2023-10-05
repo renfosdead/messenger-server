@@ -25,7 +25,7 @@ const createUser = async (userId, subscriptionId) => {
       subscriptionId
     );
     if (res) {
-      console.log("OneSignal User created successful:", res);
+      console.log("OneSignal User created successful");
       return Promise.resolve();
     }
   } catch (err) {
@@ -82,13 +82,13 @@ const pushNewMessage = async (event, addresses) => {
       en: event.body.message,
     },
     app_id: process.env.NODE_ONE_SIGNAL_APP_ID,
-    include_external_user_ids: [addresses],
+    include_external_user_ids: addresses,
   };
 
   try {
     const res = await createNotification(notification);
     if (res) {
-      console.log("Push success", res);
+      console.log("Push success");
       return Promise.resolve();
     }
   } catch (err) {
