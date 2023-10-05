@@ -6,7 +6,7 @@ const configuration = OneSignal.createConfiguration({
 
 const client = new OneSignal.DefaultApi(configuration);
 
-const createUser = async (userId, deviceToken) => {
+const createUser = async (userId, subscriptionId) => {
   try {
     const res = await client.createUser(process.env.NODE_ONE_SIGNAL_APP_ID, {
       properties: {
@@ -14,29 +14,35 @@ const createUser = async (userId, deviceToken) => {
       },
       identity: { external_id: userId },
     });
-    await createSubscription(userId, deviceToken);
+    await associateSubscriptionWithUser(userId, subscriptionId);
     if (res) {
       console.log("OneSignal User created successful:", res);
       return Promise.resolve();
     }
   } catch (err) {
-    console.log("OneSignal User create failed:", err);
+    console.log("OneSignal User create failed", err);
     return Promise.resolve();
   }
 };
 
-const createSubscription = async (userId, deviceToken) => {
-  return client.createSubscription(
-    process.env.NODE_ONE_SIGNAL_APP_ID,
-    "external_id",
-    userId,
-    {
-      subscription: {
-        type: "AndroidPush",
-        token: deviceToken,
-      },
+const associateSubscriptionWithUser = async (userId, subscriptionId) => {
+  const subscription = {
+    identity: { external_id: userId },
+  };
+  try {
+    const res = await client.transferSubscription(
+      process.env.NODE_ONE_SIGNAL_APP_ID,
+      subscriptionId,
+      subscription
+    );
+    if (res) {
+      console.log("OneSignal Subscription updated");
+      return Promise.resolve();
     }
-  );
+  } catch (err) {
+    console.log("OneSignal Subscription failed", err);
+    return Promise.resolve();
+  }
 };
 
 const removeUser = async (userId) => {
@@ -49,7 +55,7 @@ const removeUser = async (userId) => {
     console.log("OneSignal User deleted successful");
     return Promise.resolve();
   } catch (err) {
-    console.log("OneSignal User delete failed");
+    console.log("OneSignal User delete failed", err);
     return Promise.resolve();
   }
 };
