@@ -20,12 +20,37 @@ const createUser = async (userId, subscriptionId) => {
         },
       ],
     });
+    await associateSubscriptionWithUser(
+      res.identity?.onesignal_id,
+      subscriptionId
+    );
     if (res) {
       console.log("OneSignal User created successful:", res);
       return Promise.resolve();
     }
   } catch (err) {
     console.log("OneSignal User create failed", err);
+    return Promise.resolve();
+  }
+};
+
+const associateSubscriptionWithUser = async (userId, subscriptionId) => {
+  const subscription = {
+    identity: { external_id: userId },
+  };
+  try {
+    console.log("OneSignal Subscription update...");
+    const res = await client.transferSubscription(
+      process.env.NODE_ONE_SIGNAL_APP_ID,
+      subscriptionId,
+      subscription
+    );
+    if (res) {
+      console.log("OneSignal Subscription updated");
+      return Promise.resolve();
+    }
+  } catch (err) {
+    console.log("OneSignal Subscription failed", err);
     return Promise.resolve();
   }
 };
@@ -63,7 +88,7 @@ const pushNewMessage = async (event, addresses) => {
   try {
     const res = await createNotification(notification);
     if (res) {
-      console.log("Push success");
+      console.log("Push success", res);
       return Promise.resolve();
     }
   } catch (err) {
