@@ -60,27 +60,37 @@ const pushNewMessage = async (event, addresses) => {
     .map((addr) => addr.id);
 
   const notification = {
-    app_id: process.env.NODE_ONE_SIGNAL_APP_ID,
-    headings: { en: "QIP" },
+    name: "QIP: new message",
+    headings: { en: "QIP: new message" },
     contents: {
       en: event.body.message,
     },
+    app_id: process.env.NODE_ONE_SIGNAL_APP_ID,
     include_external_user_ids: [addresses],
-    include_aliases: {
-      external_id: [addresses],
-    },
   };
 
   try {
-    const res = await client.createNotification(notification);
+    const res = await createNotification(notification);
     if (res) {
-      console.log("Push success:", res);
+      console.log("Push success");
       return Promise.resolve();
     }
   } catch (err) {
-    console.log("Push error:", err, addresses);
+    console.log("Push error:", err);
     return Promise.resolve();
   }
+};
+
+const createNotification = async (notification) => {
+  return fetch(`${process.env.NODE_ONE_SIGNAL_API_URL}/notifications`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${process.env.NODE_ONE_SIGNAL_API_KEY}`,
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(notification),
+  });
 };
 
 module.exports = {
