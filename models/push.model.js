@@ -6,24 +6,25 @@ const configuration = OneSignal.createConfiguration({
 
 const client = new OneSignal.DefaultApi(configuration);
 
-const createUser = async (userId, subscriptionId) => {
+const createUser = async (userId, subscriptionId, deviceToken) => {
   try {
-    const res = await client.createUser(process.env.NODE_ONE_SIGNAL_APP_ID, {
-      properties: {
-        language: "en",
-      },
-      identity: { external_id: userId },
-      subscriptions: [
-        {
-          id: subscriptionId,
-          enabled: true,
-        },
-      ],
-    });
-    await associateSubscriptionWithUser(
-      res.identity?.onesignal_id,
-      subscriptionId
-    );
+    // const res = await client.createUser(process.env.NODE_ONE_SIGNAL_APP_ID, {
+    //   properties: {
+    //     language: "en",
+    //   },
+    //   identity: { external_id: userId },
+    //   subscriptions: [
+    //     {
+    //       id: subscriptionId,
+    //       enabled: true,
+    //     },
+    //   ],
+    // });
+    await createSubscription(userId, deviceToken);
+    // await associateSubscriptionWithUser(
+    //   res.identity?.onesignal_id,
+    //   subscriptionId
+    // );
     if (res) {
       console.log("OneSignal User created successful");
       return Promise.resolve();
@@ -32,6 +33,20 @@ const createUser = async (userId, subscriptionId) => {
     console.log("OneSignal User create failed", err);
     return Promise.resolve();
   }
+};
+
+const createSubscription = async (userId, deviceToken) => {
+  return client.createSubscription(
+    process.env.NODE_ONE_SIGNAL_APP_ID,
+    "external_id",
+    userId,
+    {
+      subscription: {
+        type: "AndroidPush",
+        token: deviceToken,
+      },
+    }
+  );
 };
 
 const associateSubscriptionWithUser = async (userId, subscriptionId) => {
