@@ -6,25 +6,9 @@ const configuration = OneSignal.createConfiguration({
 
 const client = new OneSignal.DefaultApi(configuration);
 
-const createUser = async (userId, subscriptionId, deviceToken) => {
+const createUser = async (userId, deviceToken) => {
   try {
-    // const res = await client.createUser(process.env.NODE_ONE_SIGNAL_APP_ID, {
-    //   properties: {
-    //     language: "en",
-    //   },
-    //   identity: { external_id: userId },
-    //   subscriptions: [
-    //     {
-    //       id: subscriptionId,
-    //       enabled: true,
-    //     },
-    //   ],
-    // });
     await createSubscription(userId, deviceToken);
-    // await associateSubscriptionWithUser(
-    //   res.identity?.onesignal_id,
-    //   subscriptionId
-    // );
     if (res) {
       console.log("OneSignal User created successful");
       return Promise.resolve();
@@ -47,27 +31,6 @@ const createSubscription = async (userId, deviceToken) => {
       },
     }
   );
-};
-
-const associateSubscriptionWithUser = async (userId, subscriptionId) => {
-  const subscription = {
-    identity: { external_id: userId },
-  };
-  try {
-    console.log("OneSignal Subscription update...");
-    const res = await client.transferSubscription(
-      process.env.NODE_ONE_SIGNAL_APP_ID,
-      subscriptionId,
-      subscription
-    );
-    if (res) {
-      console.log("OneSignal Subscription updated");
-      return Promise.resolve();
-    }
-  } catch (err) {
-    console.log("OneSignal Subscription failed", err);
-    return Promise.resolve();
-  }
 };
 
 const removeUser = async (userId) => {
