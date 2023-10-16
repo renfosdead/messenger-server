@@ -61,6 +61,7 @@ const pushNewMessage = async (event, addresses) => {
     },
     app_id: process.env.NODE_ONE_SIGNAL_APP_ID,
     include_external_user_ids: addresses,
+    android_channel_id: process.env.NODE_ONE_SIGNAL_ANDROID_CHANNEL_ID,
   };
 
   try {
