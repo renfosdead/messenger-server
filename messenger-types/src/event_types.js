@@ -3,4 +3,5 @@ module.exports = {
   changeStatus: "changeStatus",
   changeCustomStatus: "changeCustomStatus",
   sendMessage: "sendMessage",
+  sendImage: "sendImage",
 };

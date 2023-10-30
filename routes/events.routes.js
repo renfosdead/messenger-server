@@ -25,4 +25,17 @@ router.post(
   }
 );
 
+router.post(
+  "/image",
+  EventsMiddleware.isCorrectFieldsImage,
+  async (req, res) => {
+    EventsController.sendImage(req)
+      .then((payload) => res.json(payload))
+      .catch((err) => {
+        console.log(err);
+        return res.json(err);
+      });
+  }
+);
+
 module.exports = router;

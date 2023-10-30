@@ -36,7 +36,33 @@ function sendMessage(req) {
   );
 }
 
+function sendImage(req) {
+  return RequestHelper.isCorrectHeaders(req).then(
+    async ({ userId, chatId }) => {
+      const { image } = req.body;
+
+      //TODO: add imageUrl
+      const newImageUrl =
+        "https://www.kasandbox.org/programming-images/avatars/duskpin-sapling.png";
+
+      const newEvent = {
+        chatId,
+        userId,
+        body: { image: newImageUrl, message: "Картинка" },
+      };
+
+      await EventsModel.addEvent(EVENT_TYPES.sendImage, newEvent);
+
+      const addresses = await getChatUsers(chatId);
+      await PushModel.pushNewMessage(newEvent, addresses);
+
+      return Promise.resolve({ chatId, userId, image: newImageUrl });
+    }
+  );
+}
+
 module.exports = {
   getEvents,
   sendMessage,
+  sendImage,
 };

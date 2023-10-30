@@ -54,8 +54,8 @@ const pushNewMessage = async (event, addresses) => {
     .map((addr) => addr.id);
 
   const notification = {
-    name: "QIP: new message",
-    headings: { en: "QIP: new message" },
+    name: "QIP",
+    headings: { en: "QIP" },
     contents: {
       en: event.body.message,
     },
