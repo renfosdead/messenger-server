@@ -41,14 +41,10 @@ function sendImage(req) {
     async ({ userId, chatId }) => {
       const { image } = req.body;
 
-      //TODO: add imageUrl
-      const newImageUrl =
-        "https://www.kasandbox.org/programming-images/avatars/duskpin-sapling.png";
-
       const newEvent = {
         chatId,
         userId,
-        body: { image: newImageUrl, message: "Картинка" },
+        body: { image, message: "Картинка" },
       };
 
       await EventsModel.addEvent(EVENT_TYPES.sendImage, newEvent);
@@ -56,7 +52,7 @@ function sendImage(req) {
       const addresses = await getChatUsers(chatId);
       await PushModel.pushNewMessage(newEvent, addresses);
 
-      return Promise.resolve({ chatId, userId, image: newImageUrl });
+      return Promise.resolve({ chatId, userId, image });
     }
   );
 }
