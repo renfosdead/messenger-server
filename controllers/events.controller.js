@@ -20,10 +20,16 @@ function sendMessage(req) {
   return RequestHelper.isCorrectHeaders(req).then(
     async ({ userId, chatId }) => {
       const { message, isSmile } = req.body;
+
+      const body = { message };
+      if (isSmile) {
+        body.isSmile = true;
+      }
+
       const newEvent = {
         chatId,
         userId,
-        body: { message, isSmile },
+        body,
       };
 
       await EventsModel.addEvent(EVENT_TYPES.sendMessage, newEvent);
